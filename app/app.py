@@ -1,28 +1,29 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
+from flask import Flask, jsonify
+
+app = Flask(__name__)
 
 
-class Handler(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-        if self.path == "/health":
-            response = {
-                "status": "healthy"
-            }
-
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-
-            self.wfile.write(json.dumps(response).encode())
-
-        else:
-            self.send_response(404)
-            self.end_headers()
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy"
+    })
 
 
-server = HTTPServer(("0.0.0.0", 8080), Handler)
+@app.route("/version")
+def version():
+    return jsonify({
+        "version": "1.0.0"
+    })
 
-print("Server running on port 8080")
 
-server.serve_forever()
+@app.route("/")
+def home():
+    return jsonify({
+        "application": "DevOps Reboot API",
+        "message": "Application is running"
+    })
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
