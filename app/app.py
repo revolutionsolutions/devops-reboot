@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+import os
 
 app = Flask(__name__)
 
@@ -14,6 +15,13 @@ def health():
 def version():
     return jsonify({
         "version": "1.0.0"
+    })
+
+
+@app.route("/environment")
+def environment():
+    return jsonify({
+        "environment": os.getenv("APP_ENV", "unknown")
     })
 
 
