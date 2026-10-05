@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - ci-cd
+    paths:
+      - 'app/**'
   pull_request:
     branches:
       - ci-cd
+    paths:
+      - 'app/**'
 
 jobs:
   test:
