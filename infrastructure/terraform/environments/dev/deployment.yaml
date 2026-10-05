@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-reboot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-reboot
+  template:
+    metadata:
+      labels:
+        app: devops-reboot
+    spec:
+      containers:
+        - name: devops-reboot
+          image: acrdevopsrebootdev.azurecr.io/devops-reboot:v1
+          ports:
+            - containerPort: 8080
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
