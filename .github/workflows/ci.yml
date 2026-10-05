@@ -26,3 +26,6 @@ jobs:
 
       - name: Run tests
         run: python -m pytest -v app/
+
+      - name: Build Docker image
+        run: docker build -t devops-reboot:${{ github.sha }} ./app
