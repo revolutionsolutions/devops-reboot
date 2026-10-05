@@ -15,5 +15,5 @@ variable "resource_group_name" {
 
 variable "subnet_id" {
   description = "Subnet ID to associate with the NSG"
-  type = string
+  type        = string
 }
