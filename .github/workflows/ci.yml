@@ -1,25 +1,18 @@
-name: CI
+name: PR Validation
 
 on:
-  push:
-    branches:
-      - ci-cd
-    paths:
-      - 'app/**'
-
   pull_request:
     branches:
-      - ci-cd
+      - main
     paths:
       - 'app/**'
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
 
-    permissions:
-      contents: read
-      id-token: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -39,22 +32,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -t acrdevopsrebootdev.azurecr.io/devops-reboot:${{ github.sha }} \
+            -t devops-reboot:${{ github.sha }} \
             ./app
-
-      - name: Azure Login
-        if: github.event_name == 'push'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ vars.AZURE_CLIENT_ID }}
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Login to ACR
-        if: github.event_name == 'push'
-        run: az acr login --name acrdevopsrebootdev
-
-      - name: Push Docker image
-        if: github.event_name == 'push'
-        run: |
-          docker push acrdevopsrebootdev.azurecr.io/devops-reboot:${{ github.sha }}
+            
